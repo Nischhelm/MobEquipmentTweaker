@@ -1,0 +1,15 @@
+{
+  "required": true,
+  "package": "mobequipmenttweaker.mixin",
+  "refmap": "mixins.mobequipmenttweaker.refmap.json",
+  "compatibilityLevel": "JAVA_8",
+  "target": "@env(DEFAULT)",
+  "minVersion": "0.8",
+  "mixins": [
+    "vanilla.mobequipment.AbstractSkeletonMixin_VariousArrows"
+  ],
+  "injectors": {
+    "defaultRequire": 1,
+    "maxShiftBy": 10
+  }
+}

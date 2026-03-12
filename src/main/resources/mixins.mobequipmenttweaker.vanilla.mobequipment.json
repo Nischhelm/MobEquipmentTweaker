@@ -1,0 +1,13 @@
+{
+  "required": true,
+  "package": "mobequipmenttweaker.mixin",
+  "refmap": "mixins.mobequipmenttweaker.refmap.json",
+  "compatibilityLevel": "JAVA_8",
+  "minVersion": "0.8",
+  "mixins": [
+    "vanilla.mobequipment.AbstractSkeletonMixin",
+    "vanilla.mobequipment.EntityLivingMixin",
+    "vanilla.mobequipment.EntityLivingMixin_Enchants",
+    "vanilla.mobequipment.EntityZombieMixin"
+  ]
+}
