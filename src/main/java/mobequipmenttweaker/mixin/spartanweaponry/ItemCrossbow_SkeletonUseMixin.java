@@ -32,7 +32,7 @@ public abstract class ItemCrossbow_SkeletonUseMixin extends ItemSW {
             method = "onItemUseFinish",
             at = @At("TAIL")
     )
-    private void eagleMixins_spartanWeaponryItemCrossbow_onItemUseFinishMob(ItemStack stack, World worldIn, EntityLivingBase entityLiving, CallbackInfoReturnable<ItemStack> cir){
+    private void mobequipmenttweaker_spartanWeaponryItemCrossbow_onItemUseFinishMob(ItemStack stack, World worldIn, EntityLivingBase entityLiving, CallbackInfoReturnable<ItemStack> cir){
         if(entityLiving instanceof EntityLiving) {
             if(!NBTHelper.getBoolean(stack, ItemCrossbow.NBT_IS_LOADED)) {
                 //could be any item, for skeletons we only care about the bolt count (3 if spreadshot). Will use the offhand bolt item when actually shooting

@@ -9,14 +9,14 @@ import java.util.List;
 import java.util.Map;
 
 public class HandsSetEntry extends SetEntry {
-    public HandsSetEntry(List<String> items, String modid, int tier, int weight, float dropChance) {
-        super(items, modid, tier, weight, dropChance);
+    public HandsSetEntry(List<String> items, String modid, int weight, float dropChance) {
+        super(items, modid, weight, dropChance);
     }
-    public HandsSetEntry(List<String> items, String modid, int tier, int weight) {
-        this(items, modid, tier, weight, 0.085F);
+    public HandsSetEntry(List<String> items, String modid, int weight) {
+        this(items, modid, weight, 0.085F);
     }
-    public HandsSetEntry(List<String> items, String modid, int tier) {
-        this(items, modid, tier, 1);
+    public HandsSetEntry(List<String> items, String modid) {
+        this(items, modid, 1);
     }
     public HandsSetEntry() {} //needed for betterconfig
 

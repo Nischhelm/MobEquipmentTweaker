@@ -5,7 +5,7 @@
   "compatibilityLevel": "JAVA_8",
   "minVersion": "0.8",
   "mixins": [
-    "spartanweaponry.IItemCrossbow_Invoker",
-    "spartanweaponry.ItemCrossbow_SkeletonUseMixin"
+    "vanilla.skeletonmoddedbows.AbstractEntitySkeleton_SpartanBowMixin",
+    "vanilla.skeletonmoddedbows.EntityAIAttackRangedBow_SpartanBowMixin"
   ]
 }

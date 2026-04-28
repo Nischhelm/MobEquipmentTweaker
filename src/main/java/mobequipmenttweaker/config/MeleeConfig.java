@@ -1,7 +1,7 @@
 package mobequipmenttweaker.config;
 
-import mobequipmenttweaker.config.data.ArmorSetEntry;
 import mobequipmenttweaker.config.data.HandsSetEntry;
+import mobequipmenttweaker.config.data.TierEntry;
 import net.minecraftforge.common.config.Config;
 
 import java.util.ArrayList;
@@ -16,15 +16,18 @@ public class MeleeConfig {
             "minecraft:zombie",
             "minecraft:zombie_villager",
             "minecraft:husk",
-            "minecraft:zombie_pigman"
+            "minecraft:zombie_pigman",
+            "minecraft:vindicator",
+            "minecraft:vex"
     ).collect(Collectors.toList());
 
     @Config.Comment("Pattern: modid:itemid, weight, optional dropChance (default vanilla 0.085)")
-    @Config.Name("Melee Items")
-    public ArrayList<HandsSetEntry> weaponSets = (ArrayList<HandsSetEntry>) Stream.of(
-            new HandsSetEntry(Arrays.asList("iron_shovel", ""), "minecraft", 0, 2).setName("shovel"),
-            new HandsSetEntry(Arrays.asList("iron_sword", ""), "minecraft", 0, 1).setName("sword")
-    ).map(e -> (HandsSetEntry) e).collect(Collectors.toList());
+    @Config.Name("Melee Item Tiers")
+    public ArrayList<TierEntry> weaponSetTiers = (ArrayList<TierEntry>) Stream.of(
+            new TierEntry()
+                    .addSet(new HandsSetEntry(Arrays.asList("iron_shovel", "shield"), "minecraft", 2).setName("shovel"))
+                    .addSet(new HandsSetEntry(Arrays.asList("iron_sword", "shield"), "minecraft", 1).setName("sword"))
+    ).collect(Collectors.toList());
 
     @Config.Comment("Base chance multiplier for zombie types getting weapons. By default 5% in hard mode, 1% in all other difficulties. The given multiplier here will be multiplied on top of those.")
     @Config.Name("Zombie Weapon Base Chance Multi")

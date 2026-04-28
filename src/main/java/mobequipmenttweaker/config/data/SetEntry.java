@@ -2,6 +2,7 @@ package mobequipmenttweaker.config.data;
 
 import meldexun.betterconfig.api.Order;
 import meldexun.betterconfig.api.Unmodifiable;
+import net.minecraft.init.Items;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
 import net.minecraft.util.WeightedRandom;
@@ -14,54 +15,52 @@ public class SetEntry extends WeightedRandom.Item {
     public String name = "";
     @Order(1) @Config.Name("ModId")
     public String modid = "minecraft";
-    @Order(2) @Config.Name("Items") @Unmodifiable
+    @Order(2) @Unmodifiable @Config.Name("Items")
     public LinkedHashMap<EntityEquipmentSlot, String> itemIds = new LinkedHashMap<>(getDefaultMap());
-    @Order(3) @Config.Name("Tier")
-    public int tier = 0;
-//    @Order(4) @Config.Name("Weight")
-//    public int weight = 1;
     @Order(5) @Config.Name("Drop Chance")
     public float dropChance = 0.085F;
 
     @Config.Ignore
-    public Map<EntityEquipmentSlot, Item> items = new HashMap<>();
+    private final Map<EntityEquipmentSlot, Item> items = new HashMap<>();
     @Config.Ignore
-    public boolean isValid = false;
+    public boolean isSetup = false;
 
-    public SetEntry(List<String> items, String modid, int tier, int weight, float dropChance) {
+    public SetEntry(List<String> items, String modid, int weight, float dropChance) {
         super(weight);
         for(int i = 0; i < items.size(); i++)
             itemIds.put(getSlots().get(i), items.get(i));
         this.modid = modid;
-        this.tier = tier;
         this.dropChance = dropChance;
     }
-    public SetEntry(List<String> items, String modid, int tier, int weight) {
-        this(items, modid, tier, weight, 0.085F);
+    public SetEntry() {  //needed for betterconfig
+        super(0);
     }
-    public SetEntry(List<String> items, String modid, int tier) {
-        this(items, modid, tier, 1);
-    }
-    public SetEntry() { super(0);} //needed for betterconfig
 
-    public boolean setup(){
-        isValid = false;
+    public void setup(){
         for(Map.Entry<EntityEquipmentSlot, String> entry : itemIds.entrySet()) {
             String itemId = entry.getValue();
-            if(itemId.isEmpty()) continue;
-            Item item = Item.getByNameOrId(this.modid + itemId);
-            if(item == null) item = Item.getByNameOrId(itemId);
-            if(item == null) return false;
+            Item item;
+            if(itemId.isEmpty()) {
+                item = Items.AIR;
+            } else {
+                item = Item.getByNameOrId(this.modid + itemId);
+                if (item == null) item = Item.getByNameOrId(itemId); //fallback use custom modid in itemId
+                if (item == null) item = Items.AIR;
+            }
             //TODO: log issues
             items.put(entry.getKey(), item);
         }
-        isValid = true;
-        return isValid;
+        isSetup = true;
     }
 
     public SetEntry setName(String name){
         this.name = name;
         return this;
+    }
+
+    public Item getItem(EntityEquipmentSlot slot){
+        if(!isSetup) setup();
+        return items.get(slot);
     }
 
     @Config.Ignore

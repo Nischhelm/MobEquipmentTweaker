@@ -1,6 +1,7 @@
 package mobequipmenttweaker.config;
 
 import mobequipmenttweaker.config.data.HandsSetEntry;
+import mobequipmenttweaker.config.data.TierEntry;
 import net.minecraftforge.common.config.Config;
 
 import java.util.ArrayList;
@@ -23,10 +24,11 @@ public class RangedConfig {
     public TippedArrowConfig tippedarrows = new TippedArrowConfig();
 
     @Config.Comment("Pattern: modid:itemid, weight, optional dropChance (default vanilla 0.085)")
-    @Config.Name("Ranged Items")
-    public ArrayList<HandsSetEntry> weaponSets = (ArrayList<HandsSetEntry>) Stream.of(
-            new HandsSetEntry(Arrays.asList("bow", ""), "minecraft", 0, 1).setName("bow")
-    ).map(e -> (HandsSetEntry) e).collect(Collectors.toList());
+    @Config.Name("Ranged Item Tiers")
+    public ArrayList<TierEntry> weaponSetTiers = (ArrayList<TierEntry>) Stream.of(
+            new TierEntry()
+                    .addSet(new HandsSetEntry(Arrays.asList("bow", ""), "minecraft").setName("bow"))
+    ).collect(Collectors.toList());
 
     @Config.Comment("Enchantments for Ranged Weapons")
     @Config.Name("Enchantments")

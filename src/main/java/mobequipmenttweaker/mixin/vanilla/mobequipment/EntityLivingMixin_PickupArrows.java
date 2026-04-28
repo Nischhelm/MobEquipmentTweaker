@@ -28,7 +28,7 @@ public abstract class EntityLivingMixin_PickupArrows extends EntityLivingBase {
             method = "getSlotForItemStack",
             at = @At(value = "RETURN", ordinal = 3)
     )
-    private static EntityEquipmentSlot eaglemixins_vanillaEntityLiving_getSlotForItemStack_allowTippedArrows(EntityEquipmentSlot original, ItemStack stack){
+    private static EntityEquipmentSlot mobequipmenttweaker_vanillaEntityLiving_getSlotForItemStack_allowTippedArrows(EntityEquipmentSlot original, ItemStack stack){
         if(original != EntityEquipmentSlot.MAINHAND) return original;
         //Put tipped arrows + tipped bolts in offhand
         if(
@@ -44,7 +44,7 @@ public abstract class EntityLivingMixin_PickupArrows extends EntityLivingBase {
             at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/EntityLiving;canEquipItem(Lnet/minecraft/item/ItemStack;)Z")
     )
     //inserts where the entity already decided its not worth picking up
-    private boolean eaglemixins_vanillaEntityLiving_updateEquipmentIfNeeded_allowTippedArrows(boolean canEquip, @Local(name = "itemstack") ItemStack newStack, @Local EntityEquipmentSlot slot){
+    private boolean mobequipmenttweaker_vanillaEntityLiving_updateEquipmentIfNeeded_allowTippedArrows(boolean canEquip, @Local(name = "itemstack") ItemStack newStack, @Local(ordinal = 0) EntityEquipmentSlot slot){
         if(!canEquip) return false; //will basically never happen, only vanilla instance is chicken jockey picking up eggs
 
         if(slot == EntityEquipmentSlot.OFFHAND) { //in vanilla this filters out everything except for shields and due to this mixin also tipped items

@@ -13,13 +13,13 @@ import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 
 @Mixin(AbstractSkeleton.class)
-public abstract class AbstractSkeletonMixin_VariousArrows extends EntityLivingBase {
-    public AbstractSkeletonMixin_VariousArrows(World worldIn) {
+public abstract class AbstractSkeletonMixin_ShootOffhandArrows extends EntityLivingBase {
+    public AbstractSkeletonMixin_ShootOffhandArrows(World worldIn) {
         super(worldIn);
     }
 
     @WrapMethod(method = "getArrow")
-    private EntityArrow eagleMixins_vanillaAbstractSkeleton_getArrowEntityFromOffhandItem(float distanceFactor, Operation<EntityArrow> original){
+    private EntityArrow mobequipmenttweaker_vanillaAbstractSkeleton_getArrowEntityFromOffhandItem(float distanceFactor, Operation<EntityArrow> original){
         ItemStack offhandStack = this.getHeldItemOffhand();
 
         if (offhandStack.getItem() instanceof ItemArrow) {

@@ -1,8 +1,8 @@
 package mobequipmenttweaker.config;
 
 import com.google.common.collect.ArrayListMultimap;
-import meldexun.betterconfig.ConfigurationManager;
 import meldexun.betterconfig.api.BetterConfig;
+import meldexun.betterconfig.api.BetterConfigManager;
 import mobequipmenttweaker.config.data.ArmorSetEntry;
 import mobequipmenttweaker.config.data.HandsSetEntry;
 import mobequipmenttweaker.config.data.SetEntry;
@@ -18,8 +18,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
 
-@Config(modid = MobEquipmentTweaker.MODID)
-@BetterConfig(bigCategoryComments = false, lowerCaseCategories = false)
+@BetterConfig(modid = MobEquipmentTweaker.MODID, bigCategoryComments = false, lowerCaseCategories = false)
 public class ConfigHandler {
 	//TODO: CT event support
 	//TODO: add mobs to this (zombie pigs, oe drowned, defiled hosts?...)
@@ -57,26 +56,16 @@ public class ConfigHandler {
 		armorByTier = null;
 	}
 
-	public static HandsSetEntry getRandomWeapon(Random rand, boolean forZombie) {
-		if (forZombie && meleeWeapons == null) {
-			meleeWeapons = new ArrayList<>();
-			meleeWeapons.addAll(melee.weaponSets.stream().filter(SetEntry::setup).collect(Collectors.toList()));
-		} else if (!forZombie && rangedWeapons == null) {
-			rangedWeapons = new ArrayList<>();
-			rangedWeapons.addAll(ranged.weaponSets.stream().filter(SetEntry::setup).collect(Collectors.toList()));
-		}
-		return WeightedRandom.getRandomItem(rand, forZombie ? meleeWeapons : rangedWeapons);
+	public static SetEntry getRandomWeapon(Random rand, int tier, boolean forZombie) {
+		if(forZombie) return WeightedRandom.getRandomItem(rand, melee.weaponSetTiers.get(tier).sets);
+		else return WeightedRandom.getRandomItem(rand, ranged.weaponSetTiers.get(tier).sets);
 	}
 
-	public static ArmorSetEntry getRandomArmor(Random rand, int tier, boolean allowUndroppables) {
-		if (armorByTier == null) {
-			armorByTier = ArrayListMultimap.create();
-			armor.armorSets.stream()
-					.filter(SetEntry::setup)
-					.forEach((set) -> armorByTier.put(set.tier, set));
-		}
-
-		return WeightedRandom.getRandomItem(rand, armorByTier.get(tier).stream().filter(set -> allowUndroppables || set.dropChance > 0).collect(Collectors.toList()));
+	public static SetEntry getRandomArmor(Random rand, int tier, boolean allowUndroppables) {
+		if(allowUndroppables)
+			return WeightedRandom.getRandomItem(rand, armor.armorSetTiers.get(tier).sets);
+		else
+			return WeightedRandom.getRandomItem(rand, armor.armorSetTiers.get(tier).sets.stream().filter(set -> set.dropChance > 0).collect(Collectors.toList()));
 	}
 	
 	@Mod.EventBusSubscriber(modid = MobEquipmentTweaker.MODID)
@@ -84,7 +73,7 @@ public class ConfigHandler {
 		@SubscribeEvent
 		public static void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event) {
 			if (event.getModID().equals(MobEquipmentTweaker.MODID)) {
-				ConfigurationManager.sync(MobEquipmentTweaker.MODID, Config.Type.INSTANCE);
+				BetterConfigManager.sync(MobEquipmentTweaker.MODID);
 				ConfigHandler.reset();
 			}
 		}

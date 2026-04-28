@@ -1,14 +1,20 @@
 package mobequipmenttweaker.mixin.vanilla.mobequipment;
 
+import com.llamalad7.mixinextras.expression.Definition;
+import com.llamalad7.mixinextras.expression.Expression;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
+import com.llamalad7.mixinextras.sugar.Local;
+import com.llamalad7.mixinextras.sugar.Share;
+import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import mobequipmenttweaker.config.ConfigHandler;
 import mobequipmenttweaker.config.data.ArmorSetEntry;
+import mobequipmenttweaker.config.data.SetEntry;
+import mobequipmenttweaker.util.MobEquipAlgorithm;
 import mobequipmenttweaker.util.MobEquipState;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
@@ -28,20 +34,28 @@ public abstract class EntityLivingMixin extends EntityLivingBase {
         super(worldIn);
     }
 
-    @Unique private static MobEquipState eaglemixins$state = MobEquipState.OTHER;
-    @Unique private static ArmorSetEntry eaglemixins$chosenSet = null;
-    @Unique private static EntityLiving eaglemixins$currentEntity = null;
+    @Unique private static MobEquipState mobequipmenttweaker$state = MobEquipState.OTHER;
+    @Unique private static SetEntry mobequipmenttweaker$chosenSet = null;
+    @Unique private static EntityLiving mobequipmenttweaker$currentEntity = null;
+
+    @Inject(
+            method = "setEquipmentBasedOnDifficulty",
+            at = @At("HEAD")
+    )
+    private void mobequipmenttweaker_vanillaEntityLiving_setEquipmentBasedOnDifficulty_head(DifficultyInstance difficulty, CallbackInfo ci, @Share("algo") LocalRef<MobEquipAlgorithm> algo){
+        algo.set(new MobEquipAlgorithm.VANILLA_ARMOR(this.rand, difficulty.getClampedAdditionalDifficulty(), this.world.getDifficulty()));
+    }
 
     @Inject(
             method = "setEquipmentBasedOnDifficulty",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/inventory/EntityEquipmentSlot;values()[Lnet/minecraft/inventory/EntityEquipmentSlot;")
     )
-    private void eaglemixins_vanillaEntityLiving_setEquipmentBasedOnDifficulty_beforeLoop(DifficultyInstance p_180481_1_, CallbackInfo ci){
-        eaglemixins$state = MobEquipState.START_EQUIPPING;
-        eaglemixins$currentEntity = (EntityLiving)(Object) this;
+    private void mobequipmenttweaker_vanillaEntityLiving_setEquipmentBasedOnDifficulty_beforeLoop(DifficultyInstance p_180481_1_, CallbackInfo ci){
+        mobequipmenttweaker$state = MobEquipState.START_EQUIPPING;
+        mobequipmenttweaker$currentEntity = (EntityLiving)(Object) this;
     }
 
-    @Unique private static final List<EntityEquipmentSlot[]> eaglemixins$equipmentSlotPermutations = Arrays.asList( //lol... permutations by https://eleif.net/permutations.html
+    @Unique private static final List<EntityEquipmentSlot[]> mobequipmenttweaker$equipmentSlotPermutations = Arrays.asList( //lol... permutations by https://eleif.net/permutations.html
             new EntityEquipmentSlot[]{EntityEquipmentSlot.HEAD, EntityEquipmentSlot.CHEST, EntityEquipmentSlot.LEGS, EntityEquipmentSlot.FEET},
             new EntityEquipmentSlot[]{EntityEquipmentSlot.HEAD, EntityEquipmentSlot.CHEST, EntityEquipmentSlot.FEET, EntityEquipmentSlot.LEGS},
             new EntityEquipmentSlot[]{EntityEquipmentSlot.HEAD, EntityEquipmentSlot.LEGS, EntityEquipmentSlot.CHEST, EntityEquipmentSlot.FEET},
@@ -72,18 +86,18 @@ public abstract class EntityLivingMixin extends EntityLivingBase {
             method = "setEquipmentBasedOnDifficulty",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/inventory/EntityEquipmentSlot;values()[Lnet/minecraft/inventory/EntityEquipmentSlot;")
     )
-    private EntityEquipmentSlot[] eaglemixins_vanillaEntityLiving_setEquipmentBasedOnDifficulty_randomiseLoop(EntityEquipmentSlot[] original){
-        return eaglemixins$equipmentSlotPermutations.get(this.getRNG().nextInt(24)); //this is probably cheaper than creating a new shuffle every time
+    private EntityEquipmentSlot[] mobequipmenttweaker_vanillaEntityLiving_setEquipmentBasedOnDifficulty_randomiseLoop(EntityEquipmentSlot[] original){
+        return mobequipmenttweaker$equipmentSlotPermutations.get(this.getRNG().nextInt(24)); //this is probably cheaper than creating a new shuffle every time
     }
 
     @Inject(
             method = "setEquipmentBasedOnDifficulty",
             at = @At(value = "RETURN")
     )
-    private void eaglemixins_vanillaEntityLiving_setEquipmentBasedOnDifficulty_tail(DifficultyInstance p_180481_1_, CallbackInfo ci){
-        eaglemixins$chosenSet = null;
-        eaglemixins$currentEntity = null;
-        eaglemixins$state = MobEquipState.OTHER;
+    private void mobequipmenttweaker_vanillaEntityLiving_setEquipmentBasedOnDifficulty_tail(DifficultyInstance p_180481_1_, CallbackInfo ci){
+        mobequipmenttweaker$chosenSet = null;
+        mobequipmenttweaker$currentEntity = null;
+        mobequipmenttweaker$state = MobEquipState.OTHER;
     }
 
     @Inject(
@@ -91,36 +105,39 @@ public abstract class EntityLivingMixin extends EntityLivingBase {
             at = @At(value = "HEAD"),
             cancellable = true
     )
-    private static void eaglemixins_vanillaEntityLiving_getArmorByChance(EntityEquipmentSlot slotIn, int chance, CallbackInfoReturnable<Item> cir){
-        switch (eaglemixins$state){
+    private static void mobequipmenttweaker_vanillaEntityLiving_getArmorByChance(EntityEquipmentSlot slotIn, int chance, CallbackInfoReturnable<Item> cir){
+        switch (mobequipmenttweaker$state){
             case START_EQUIPPING: // called first time for one mob from EntityLiving.setEquipmentBasedOnDifficulty
-                eaglemixins$chosenSet = ConfigHandler.getRandomArmor(eaglemixins$currentEntity.getRNG(), chance, true);
-                cir.setReturnValue(eaglemixins$chosenSet.items.get(slotIn));
-                eaglemixins$currentEntity.setDropChance(slotIn, eaglemixins$chosenSet.dropChance);
-                eaglemixins$state = MobEquipState.SET_CHOSEN;
+                mobequipmenttweaker$chosenSet = ConfigHandler.getRandomArmor(mobequipmenttweaker$currentEntity.getRNG(), chance, true);
+                cir.setReturnValue(mobequipmenttweaker$chosenSet.getItem(slotIn));
+                mobequipmenttweaker$currentEntity.setDropChance(slotIn, mobequipmenttweaker$chosenSet.dropChance);
+                mobequipmenttweaker$state = MobEquipState.SET_CHOSEN;
                 return;
             case SET_CHOSEN: // called a second/third/fourth time for the same mob from EntityLiving.setEquipmentBasedOnDifficulty -> use same set
-                cir.setReturnValue(eaglemixins$chosenSet.items.get(slotIn));
-                eaglemixins$currentEntity.setDropChance(slotIn, eaglemixins$chosenSet.dropChance);
+                cir.setReturnValue(mobequipmenttweaker$chosenSet.getItem(slotIn));
+                mobequipmenttweaker$currentEntity.setDropChance(slotIn, mobequipmenttweaker$chosenSet.dropChance);
                 return;
             case OTHER: // called from somewhere else -> random mix of sets that don't have dropchance 0 cause we cant actually apply it here
-                cir.setReturnValue(ConfigHandler.getRandomArmor(new Random(), chance, false).items.get(slotIn));
+                cir.setReturnValue(ConfigHandler.getRandomArmor(new Random(), chance, false).getItem(slotIn));
         }
     }
 
-    @ModifyConstant(
+    @Definition(id = "getClampedAdditionalDifficulty", method = "Lnet/minecraft/world/DifficultyInstance;getClampedAdditionalDifficulty()F")
+    @Definition(id = "difficulty", local = @Local(argsOnly = true, type = DifficultyInstance.class))
+    @Expression("? * difficulty.getClampedAdditionalDifficulty()")
+    @ModifyExpressionValue(
             method = "setEquipmentBasedOnDifficulty",
-            constant = @Constant(floatValue = 0.15F)
+            at = @At(value = "MIXINEXTRAS:EXPRESSION")
     )
-    private float eaglemixins_vanillaEntityLiving_setEquipmentBasedOnDifficulty_base(float constant){
-        return ConfigHandler.armor.baseArmorChance;
+    private float mobequipmenttweaker_vanillaEntityLiving_setEquipmentBasedOnDifficulty_base(float originalChance, @Share("algo") LocalRef<MobEquipAlgorithm> algo){
+        return algo.get().chanceToEquip();
     }
 
     @ModifyConstant(
             method = "setEquipmentBasedOnDifficulty",
             constant = @Constant(floatValue = 0.095F)
     )
-    private float eaglemixins_vanillaEntityLiving_setEquipmentBasedOnDifficulty_tierincreasechance(float constant){
+    private float mobequipmenttweaker_vanillaEntityLiving_setEquipmentBasedOnDifficulty_tierincreasechance(float constant){
         return 0; //fail all of them and instead do our own
     }
 
@@ -129,11 +146,8 @@ public abstract class EntityLivingMixin extends EntityLivingBase {
             at = @At("STORE"),
             name = "i"
     )
-    private int eaglemixins_vanillaEntityLiving_setEquipmentBasedOnDifficulty_maxtier(int constant){
-        for(int idx = 1; idx < ConfigHandler.armor.armorMaxTier; idx++)
-            if (this.getRNG().nextFloat() < ConfigHandler.armor.armorTierIncreaseChance)
-                ++constant;
-        return constant;
+    private int mobequipmenttweaker_vanillaEntityLiving_setEquipmentBasedOnDifficulty_maxtier(int constant, @Share("algo") LocalRef<MobEquipAlgorithm> algo){
+        return algo.get().rollTier();
     }
 
     @ModifyVariable(
@@ -141,7 +155,7 @@ public abstract class EntityLivingMixin extends EntityLivingBase {
             at = @At("STORE"),
             name = "f"
     )
-    private float eaglemixins_vanillaEntityLiving_setEquipmentBasedOnDifficulty_additionalArmorPieceChance(float constant) {
-        return MathHelper.clamp(1F - ConfigHandler.armor.additionalArmorChanceMulti * (1F - constant), 0F, 1F);
+    private float mobequipmenttweaker_vanillaEntityLiving_setEquipmentBasedOnDifficulty_additionalArmorPieceChance(float constant, @Share("algo") LocalRef<MobEquipAlgorithm> algo) {
+        return 1F - algo.get().chanceToAddPieces();
     }
 }
