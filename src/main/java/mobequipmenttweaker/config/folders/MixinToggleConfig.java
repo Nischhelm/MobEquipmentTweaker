@@ -1,10 +1,10 @@
 package mobequipmenttweaker.config.folders;
 
 import fermiumbooter.annotations.MixinConfig;
-import mobequipmenttweaker.MobEquipmentTweaker;
+import mobequipmenttweaker.Tags;
 import net.minecraftforge.common.config.Config;
 
-@MixinConfig(name = MobEquipmentTweaker.MODID)
+@MixinConfig(name = Tags.MODID)
 @SuppressWarnings("unused")
 public class MixinToggleConfig {
 

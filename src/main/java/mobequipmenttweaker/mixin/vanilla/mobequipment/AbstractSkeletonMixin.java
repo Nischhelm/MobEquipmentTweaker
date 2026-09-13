@@ -1,7 +1,6 @@
 package mobequipmenttweaker.mixin.vanilla.mobequipment;
 
-import mobequipmenttweaker.config.ConfigHandler;
-import mobequipmenttweaker.config.data.HandsSetEntry;
+import mobequipmenttweaker.config.ConfigProvider;
 import mobequipmenttweaker.config.data.SetEntry;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.monster.AbstractSkeleton;
@@ -24,7 +23,7 @@ public abstract class AbstractSkeletonMixin extends EntityLiving {
     )
     private Item mobequipmenttweaker_vanillaAbstractSkeleton_setEquipmentBasedOnDifficulty(Item itemIn){
         //TODO: roll tier
-        SetEntry entry = ConfigHandler.getRandomWeapon(this.getRNG(), 0, false);
+        SetEntry entry = ConfigProvider.getRandomWeapon(this.getRNG(), 0, false);
         this.setDropChance(EntityEquipmentSlot.MAINHAND, entry.dropChance);
         return entry.getItem(EntityEquipmentSlot.MAINHAND);
     }

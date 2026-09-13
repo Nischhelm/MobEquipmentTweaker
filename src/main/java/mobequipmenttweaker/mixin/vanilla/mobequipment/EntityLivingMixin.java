@@ -6,8 +6,7 @@ import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
-import mobequipmenttweaker.config.ConfigHandler;
-import mobequipmenttweaker.config.data.ArmorSetEntry;
+import mobequipmenttweaker.config.ConfigProvider;
 import mobequipmenttweaker.config.data.SetEntry;
 import mobequipmenttweaker.util.MobEquipAlgorithm;
 import mobequipmenttweaker.util.MobEquipState;
@@ -108,7 +107,7 @@ public abstract class EntityLivingMixin extends EntityLivingBase {
     private static void mobequipmenttweaker_vanillaEntityLiving_getArmorByChance(EntityEquipmentSlot slotIn, int chance, CallbackInfoReturnable<Item> cir){
         switch (mobequipmenttweaker$state){
             case START_EQUIPPING: // called first time for one mob from EntityLiving.setEquipmentBasedOnDifficulty
-                mobequipmenttweaker$chosenSet = ConfigHandler.getRandomArmor(mobequipmenttweaker$currentEntity.getRNG(), chance, true);
+                mobequipmenttweaker$chosenSet = ConfigProvider.getRandomArmor(mobequipmenttweaker$currentEntity.getRNG(), chance, true);
                 cir.setReturnValue(mobequipmenttweaker$chosenSet.getItem(slotIn));
                 mobequipmenttweaker$currentEntity.setDropChance(slotIn, mobequipmenttweaker$chosenSet.dropChance);
                 mobequipmenttweaker$state = MobEquipState.SET_CHOSEN;
@@ -118,7 +117,7 @@ public abstract class EntityLivingMixin extends EntityLivingBase {
                 mobequipmenttweaker$currentEntity.setDropChance(slotIn, mobequipmenttweaker$chosenSet.dropChance);
                 return;
             case OTHER: // called from somewhere else -> random mix of sets that don't have dropchance 0 cause we cant actually apply it here
-                cir.setReturnValue(ConfigHandler.getRandomArmor(new Random(), chance, false).getItem(slotIn));
+                cir.setReturnValue(ConfigProvider.getRandomArmor(new Random(), chance, false).getItem(slotIn));
         }
     }
 

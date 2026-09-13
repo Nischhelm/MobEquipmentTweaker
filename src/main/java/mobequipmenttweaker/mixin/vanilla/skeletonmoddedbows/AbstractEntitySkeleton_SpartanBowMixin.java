@@ -4,7 +4,7 @@ import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
-import mobequipmenttweaker.MobEquipmentTweaker;
+import mobequipmenttweaker.Tags;
 import mobequipmenttweaker.util.SpartanWeaponryUtil;
 import mobequipmenttweaker.config.ConfigHandler;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -40,7 +40,7 @@ public abstract class AbstractEntitySkeleton_SpartanBowMixin extends EntityMob {
     }
 
     @Unique private static final String UUID_WEAPON_RANGE = "e7b2eccc-c495-42d9-81e8-9593f74be7f1";
-    @Unique private static final String WEAPON_RANGE_MODIFIER = MobEquipmentTweaker.MODID + ":spartanWeaponRange";
+    @Unique private static final String WEAPON_RANGE_MODIFIER = Tags.MODID + ":spartanWeaponRange";
     @Unique private AttributeModifier eagleMixins$spartanWeaponRange;
 
     @Shadow @Final private EntityAIAttackRangedBow<AbstractSkeleton> aiArrowAttack;

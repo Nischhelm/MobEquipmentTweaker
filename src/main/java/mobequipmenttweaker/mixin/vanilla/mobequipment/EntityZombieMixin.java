@@ -3,7 +3,7 @@ package mobequipmenttweaker.mixin.vanilla.mobequipment;
 import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import mobequipmenttweaker.config.ConfigHandler;
-import mobequipmenttweaker.config.data.HandsSetEntry;
+import mobequipmenttweaker.config.ConfigProvider;
 import mobequipmenttweaker.config.data.SetEntry;
 import mobequipmenttweaker.util.MobEquipAlgorithm;
 import net.minecraft.entity.EntityLiving;
@@ -36,7 +36,7 @@ public abstract class EntityZombieMixin extends EntityLiving {
     )
     private Item mobequipmenttweaker_vanillaEntityZombie_setEquipmentBasedOnDifficulty_changeItem(Item itemIn, @Share("algo")LocalRef<MobEquipAlgorithm> algo){
         //TODO: roll tier
-        SetEntry entry = ConfigHandler.getRandomWeapon(this.getRNG(), 0, true);
+        SetEntry entry = ConfigProvider.getRandomWeapon(this.getRNG(), 0, true);
         this.setDropChance(EntityEquipmentSlot.MAINHAND, entry.dropChance);
         return entry.getItem(EntityEquipmentSlot.MAINHAND);
     }

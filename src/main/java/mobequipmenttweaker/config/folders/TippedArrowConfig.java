@@ -1,6 +1,6 @@
 package mobequipmenttweaker.config.folders;
 
-import mobequipmenttweaker.MobEquipmentTweaker;
+import mobequipmenttweaker.Tags;
 import mobequipmenttweaker.util.ModLoadedUtil;
 import mobequipmenttweaker.util.SpartanWeaponryUtil;
 import net.minecraft.init.Items;
@@ -167,7 +167,7 @@ public class TippedArrowConfig {
         for(String potionString : config) {
             PotionType type = PotionType.getPotionTypeForName(potionString);
             if(type == null || type == PotionTypes.EMPTY){
-                MobEquipmentTweaker.LOGGER.warn("Arrow PotionTypes invalid, PotionType: {}, ignoring.", potionString);
+                Tags.LOGGER.warn("Arrow PotionTypes invalid, PotionType: {}, ignoring.", potionString);
                 continue;
             }
             tippedArrowTypes.add(type);
