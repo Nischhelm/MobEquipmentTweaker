@@ -1,4 +1,4 @@
-package mobequipmenttweaker.config;
+package mobequipmenttweaker.config.folders;
 
 import mobequipmenttweaker.MobEquipmentTweaker;
 import mobequipmenttweaker.util.ModLoadedUtil;

@@ -1,4 +1,4 @@
-package mobequipmenttweaker.config;
+package mobequipmenttweaker.config.folders;
 
 import meldexun.betterconfig.api.Order;
 import mobequipmenttweaker.config.data.ArmorSetEntry;

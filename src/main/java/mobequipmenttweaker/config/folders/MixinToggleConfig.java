@@ -1,4 +1,4 @@
-package mobequipmenttweaker.config;
+package mobequipmenttweaker.config.folders;
 
 import fermiumbooter.annotations.MixinConfig;
 import mobequipmenttweaker.MobEquipmentTweaker;

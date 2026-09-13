@@ -1,4 +1,4 @@
-package mobequipmenttweaker.config;
+package mobequipmenttweaker.config.folders;
 
 import mobequipmenttweaker.config.data.HandsSetEntry;
 import mobequipmenttweaker.config.data.TierEntry;

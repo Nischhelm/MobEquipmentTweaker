@@ -6,6 +6,10 @@ import meldexun.betterconfig.api.BetterConfigManager;
 import mobequipmenttweaker.config.data.ArmorSetEntry;
 import mobequipmenttweaker.config.data.HandsSetEntry;
 import mobequipmenttweaker.config.data.SetEntry;
+import mobequipmenttweaker.config.folders.ArmorConfig;
+import mobequipmenttweaker.config.folders.MeleeConfig;
+import mobequipmenttweaker.config.folders.MixinToggleConfig;
+import mobequipmenttweaker.config.folders.RangedConfig;
 import net.minecraft.util.WeightedRandom;
 import net.minecraftforge.common.config.Config;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
@@ -13,12 +17,15 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import mobequipmenttweaker.MobEquipmentTweaker;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
 
-@BetterConfig(modid = MobEquipmentTweaker.MODID, bigCategoryComments = false, lowerCaseCategories = false)
+@BetterConfig(
+		modid = MobEquipmentTweaker.MODID,
+		bigCategoryComments = false,
+		lowerCaseCategories = false
+)
 public class ConfigHandler {
 	//TODO: CT event support
 	//TODO: add mobs to this (zombie pigs, oe drowned, defiled hosts?...)
