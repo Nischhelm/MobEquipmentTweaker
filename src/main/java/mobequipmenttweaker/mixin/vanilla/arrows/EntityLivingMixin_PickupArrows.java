@@ -1,9 +1,8 @@
-package mobequipmenttweaker.mixin.vanilla.mobequipment;
+package mobequipmenttweaker.mixin.vanilla.arrows;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.sugar.Local;
-import mobequipmenttweaker.util.ModLoadedUtil;
 import mobequipmenttweaker.util.SpartanWeaponryUtil;
 import mobequipmenttweaker.config.ConfigHandler;
 import mobequipmenttweaker.handlers.RandomTippedArrowHandler;

@@ -1,4 +1,4 @@
-package mobequipmenttweaker.mixin.vanilla.mobequipment;
+package mobequipmenttweaker.mixin.vanilla.arrows;
 
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;

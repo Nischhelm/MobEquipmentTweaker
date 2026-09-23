@@ -5,6 +5,6 @@
   "compatibilityLevel": "JAVA_8",
   "minVersion": "0.8",
   "mixins": [
-    "vanilla.mobequipment.EntityLivingMixin_PickupArrows"
+    "vanilla.arrows.EntityLivingMixin_PickupArrows"
   ]
 }
