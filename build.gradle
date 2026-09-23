@@ -19,8 +19,8 @@ minecraft {
         client {
             args "--username=InDev"
 
-            jvmArg "-Dmixin.hotSwap=true"
             jvmArg "-Dfml.coreMods.load=betterconfig.asm.BetterConfigPlugin}"
+//            jvmArg "-Dmixin.hotSwap=true"
             jvmArg "-Dmixin.checks.interfaces=true"
             jvmArg "-Dmixin.debug.export=true"
 
@@ -32,8 +32,8 @@ minecraft {
 
         server {
 
-            jvmArg "-Dmixin.hotSwap=true"
             jvmArg "-Dfml.coreMods.load=betterconfig.asm.BetterConfigPlugin"
+//            jvmArg "-Dmixin.hotSwap=true"
             jvmArg "-Dmixin.checks.interfaces=true"
             jvmArg "-Dmixin.debug.export=true"
 
