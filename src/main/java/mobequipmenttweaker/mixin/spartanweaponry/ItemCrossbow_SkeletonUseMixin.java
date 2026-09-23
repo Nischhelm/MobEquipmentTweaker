@@ -26,8 +26,10 @@ public abstract class ItemCrossbow_SkeletonUseMixin extends ItemSW {
 
     /**
      * Allows Skeletons to use without bricking
-     * WrapMethod rather than an Inject at TAIL: Spartan Fire injects at HEAD of the same method and cancels it for every entity,
-     * not just players, so a TAIL inject never runs for mobs. Wrapping the whole method loads the crossbow after whatever ran.
+     * Spartan Fire injects at HEAD of the same method and cancels it for every entity,
+     * so we need to WrapMethod to be earlier.
+     *
+     * By cdstk, fixed by Fresh-glitch
      */
     @WrapMethod(method = "onItemUseFinish")
     private ItemStack mobequipmenttweaker_spartanWeaponryItemCrossbow_onItemUseFinishMob(ItemStack stack, World worldIn, EntityLivingBase entityLiving, Operation<ItemStack> original){
