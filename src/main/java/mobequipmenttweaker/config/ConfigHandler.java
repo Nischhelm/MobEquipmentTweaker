@@ -38,14 +38,12 @@ public class ConfigHandler {
 	@Config.Name("Ranged")
 	public static final RangedConfig ranged = new RangedConfig();
 
-	@Mod.EventBusSubscriber(modid = Tags.MODID)
+	@Mod.EventBusSubscriber
 	private static class EventHandler {
 		@SubscribeEvent
 		public static void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event) {
-			if (event.getModID().equals(Tags.MODID)) {
+			if (event.getModID().equals(Tags.MODID))
 				BetterConfigManager.sync(Tags.MODID);
-				ConfigProvider.reset();
-			}
 		}
 	}
 }
