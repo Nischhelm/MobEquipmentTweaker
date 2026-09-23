@@ -15,7 +15,8 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 @BetterConfig(
 		modid = Tags.MODID,
 		bigCategoryComments = false,
-		lowerCaseCategories = false
+		lowerCaseCategories = false,
+		version = Tags.CFG_VERSION
 )
 public class ConfigHandler {
 	//TODO: CT event support

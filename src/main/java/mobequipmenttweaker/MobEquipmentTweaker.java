@@ -9,8 +9,8 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
         version = Tags.VERSION,
         name = Tags.NAME,
         dependencies =
-                "required:betterconfig;"//@[1.2.0,);"
                 "required-after:fermiumbooter@[1.5.2,);" +
+                "required:betterconfig@[1.3.0,);"
 )
 public class MobEquipmentTweaker {
     public static boolean completedLoading = false;
