@@ -1,5 +1,7 @@
 package mobequipmenttweaker.mixin.spartanweaponry;
 
+import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.oblivioussp.spartanweaponry.init.EnchantmentRegistrySW;
 import com.oblivioussp.spartanweaponry.init.ItemRegistrySW;
 import com.oblivioussp.spartanweaponry.init.SoundRegistry;
@@ -14,9 +16,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(ItemCrossbow.class)
 public abstract class ItemCrossbow_SkeletonUseMixin extends ItemSW {
@@ -27,12 +26,12 @@ public abstract class ItemCrossbow_SkeletonUseMixin extends ItemSW {
 
     /**
      * Allows Skeletons to use without bricking
+     * WrapMethod rather than an Inject at TAIL: Spartan Fire injects at HEAD of the same method and cancels it for every entity,
+     * not just players, so a TAIL inject never runs for mobs. Wrapping the whole method loads the crossbow after whatever ran.
      */
-    @Inject(
-            method = "onItemUseFinish",
-            at = @At("TAIL")
-    )
-    private void mobequipmenttweaker_spartanWeaponryItemCrossbow_onItemUseFinishMob(ItemStack stack, World worldIn, EntityLivingBase entityLiving, CallbackInfoReturnable<ItemStack> cir){
+    @WrapMethod(method = "onItemUseFinish")
+    private ItemStack mobequipmenttweaker_spartanWeaponryItemCrossbow_onItemUseFinishMob(ItemStack stack, World worldIn, EntityLivingBase entityLiving, Operation<ItemStack> original){
+        ItemStack result = original.call(stack, worldIn, entityLiving);
         if(entityLiving instanceof EntityLiving) {
             if(!NBTHelper.getBoolean(stack, ItemCrossbow.NBT_IS_LOADED)) {
                 //could be any item, for skeletons we only care about the bolt count (3 if spreadshot). Will use the offhand bolt item when actually shooting
@@ -43,5 +42,6 @@ public abstract class ItemCrossbow_SkeletonUseMixin extends ItemSW {
                 NBTHelper.setBoolean(stack, ItemCrossbow.NBT_IS_LOADED, true);
             }
         }
+        return result;
     }
 }
