@@ -8,10 +8,8 @@ import net.minecraftforge.common.config.Config;
 @SuppressWarnings("unused")
 public class MixinToggleConfig {
 
-    @Config.Comment("Allows to modify mob equipment (mainly zombies and skeletons) set in the \"Mob Equipment\" config.")
-    @Config.Name("Mob Equipment Modification (Vanilla)")
-    @Config.RequiresMcRestart
-    @MixinConfig.MixinToggle(earlyMixin = "mixins.mobequipmenttweaker.vanilla.mobequipment.json", defaultValue = true)
+    @Config.Comment("Allows to modify mob equipment (vanilla and modded) as defined in the \"Mob Groups\" config.")
+    @Config.Name("Mob Equipment Modification")
     public boolean mobEquipmentModify = true;
 
     @Config.Comment("Allows skeletons to use Spartan Weaponry and benefit from weapon stats. Options in the \"Mob Equipment\" config. If \"Modded Arrow Skeletons\" is disabled, skeletons using crossbows will always use normal bolts, and skeletons using longbows will use the same arrow behaviors like when they have a normal bow.")

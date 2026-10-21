@@ -50,7 +50,7 @@ public abstract class EntityLivingMixin_PickupArrows extends EntityLivingBase {
             PotionType type = PotionUtils.getPotionFromItem(newStack);
 
             //Only pickup tipped items with potion types from the random tipped arrow config (this is a somewhat broad check. all offhand items with potiontypes in their nbt will fall into this)
-            if(!ConfigHandler.ranged.tippedarrows.isRandomArrowPotionType(type)) return false;
+            if(!ConfigHandler.tippedArrows.isRandomArrowPotionType(type)) return false;
 
             ItemStack main = this.getHeldItemMainhand();
             if(main.isEmpty()) return false;

@@ -34,7 +34,7 @@ public abstract class EntityAIAttackRangedBow_SpartanBowMixin<T extends EntityMo
             at = @At(value = "FIELD", target = "Lnet/minecraft/entity/ai/EntityAIAttackRangedBow;moveSpeedAmp:D")
     )
     private double spartanCombat_vanillaEntityAIAttackRangedBow_updateTaskMoveSpeedPenalty(double original){
-        if(SpartanWeaponryUtil.isHoldingSpartanRangedWeapon(this.entity) && ConfigHandler.ranged.spartanSkeletons.enableMoveSpeedPenalty){
+        if(SpartanWeaponryUtil.isHoldingSpartanRangedWeapon(this.entity) && ConfigHandler.spartanSkeletons.enableMoveSpeedPenalty){
             return original / SpartanWeaponryUtil.getMaxVelocity(this.entity.getHeldItemMainhand());
         }
         return original;
@@ -45,7 +45,7 @@ public abstract class EntityAIAttackRangedBow_SpartanBowMixin<T extends EntityMo
             at = @At(value = "FIELD", target = "Lnet/minecraft/entity/ai/EntityAIAttackRangedBow;maxAttackDistance:F")
     )
     private float spartanCombat_vanillaEntityAIAttackRangedBow_updateTaskStrafeDistanceBonus(float original){
-        if(SpartanWeaponryUtil.isHoldingSpartanRangedWeapon(this.entity) && ConfigHandler.ranged.spartanSkeletons.enableStrafeDistanceBonus){
+        if(SpartanWeaponryUtil.isHoldingSpartanRangedWeapon(this.entity) && ConfigHandler.spartanSkeletons.enableStrafeDistanceBonus){
             return (float) (original * SpartanWeaponryUtil.getMaxVelocity(this.entity.getHeldItemMainhand()));
         }
         return original;

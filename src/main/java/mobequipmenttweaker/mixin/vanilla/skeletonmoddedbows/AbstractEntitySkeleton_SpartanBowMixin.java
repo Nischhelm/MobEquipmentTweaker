@@ -51,7 +51,7 @@ public abstract class AbstractEntitySkeleton_SpartanBowMixin extends EntityMob {
             at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/ai/EntityAITasks;removeTask(Lnet/minecraft/entity/ai/EntityAIBase;)V", ordinal = 0)
     )
     private void eagleMixins_vanillaAbstractSkeleton_setCombatTaskRemoveRangeBonus(CallbackInfo ci) {
-        if(this.eagleMixins$spartanWeaponRange != null && ConfigHandler.ranged.spartanSkeletons.enableFollowRangeBonus) {
+        if(this.eagleMixins$spartanWeaponRange != null && ConfigHandler.spartanSkeletons.enableFollowRangeBonus) {
             IAttributeInstance followRange = this.getAttributeMap().getAttributeInstance(SharedMonsterAttributes.FOLLOW_RANGE);
             if (followRange.hasModifier(eagleMixins$spartanWeaponRange)) followRange.removeModifier(eagleMixins$spartanWeaponRange);
         }
@@ -161,7 +161,7 @@ public abstract class AbstractEntitySkeleton_SpartanBowMixin extends EntityMob {
 
     @Unique
     private void eagleMixins$applyBonusFollowRange(double maxVelocityMultiplier){
-        if(!ConfigHandler.ranged.spartanSkeletons.enableFollowRangeBonus) return;
+        if(!ConfigHandler.spartanSkeletons.enableFollowRangeBonus) return;
         if(maxVelocityMultiplier <= 1) return;
 
         IAttributeInstance followRange = this.getAttributeMap().getAttributeInstance(SharedMonsterAttributes.FOLLOW_RANGE);
