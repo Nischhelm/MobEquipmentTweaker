@@ -6,6 +6,8 @@
   "minVersion": "0.8",
   "mixins": [
     "spartanweaponry.IItemCrossbow_Invoker",
+    "spartanweaponry.IItemThrowingWeapon_Accessor",
+    "spartanweaponry.IItemThrowingWeapon_Invoker",
     "spartanweaponry.ItemCrossbow_SkeletonUseMixin"
   ]
 }

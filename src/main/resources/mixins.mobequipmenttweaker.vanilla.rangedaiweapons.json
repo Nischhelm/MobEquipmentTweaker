@@ -5,7 +5,9 @@
   "compatibilityLevel": "JAVA_8",
   "minVersion": "0.8",
   "mixins": [
-    "vanilla.skeletonmoddedbows.AbstractEntitySkeleton_SpartanBowMixin",
-    "vanilla.skeletonmoddedbows.EntityAIAttackRangedBow_SpartanBowMixin"
+    "vanilla.arrows.IAbstractSkeleton_Invoker",
+    "vanilla.arrows.IEntityTippedArrow_Accessor",
+    "vanilla.skeletonmoddedbows.AbstractEntitySkeleton_ModdedBowMixin",
+    "vanilla.skeletonmoddedbows.EntityAIAttackRangedBow_ModdedBowMixin"
   ]
 }
