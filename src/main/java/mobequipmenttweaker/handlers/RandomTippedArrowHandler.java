@@ -31,7 +31,7 @@ public class RandomTippedArrowHandler {
         if (entity == null || entity.world.isRemote) return;
 
         ResourceLocation entityId = EntityList.getKey(entity);
-        if (entityId == null || !ConfigHandler.ranged.tippedarrows.entityIds.contains(entityId.toString())) return;
+        if (entityId == null || !ConfigHandler.tippedArrows.entityIds.contains(entityId.toString())) return;
 
         boolean hasBow = entity.getHeldItemMainhand().getItem() instanceof ItemBow;
         boolean hasCrossbow = !hasBow && ModLoadedUtil.spartanweaponry.isLoaded() && SpartanWeaponryUtil.isSpartanCrossbow(entity.getHeldItemMainhand().getItem());
@@ -48,10 +48,10 @@ public class RandomTippedArrowHandler {
         }
 
         //Give entity tipped arrow
-        if (entity.getRNG().nextFloat() <= ConfigHandler.ranged.tippedarrows.chance) {
+        if (entity.getRNG().nextFloat() <= ConfigHandler.tippedArrows.chance) {
             tag.setBoolean("ArrowEntity", true);
             //Start with non-long arrow, chance to replace every hit
-            entity.setItemStackToSlot(EntityEquipmentSlot.OFFHAND, ConfigHandler.ranged.tippedarrows.getRandomArrowStack(entity.getRNG(), false, hasCrossbow));
+            entity.setItemStackToSlot(EntityEquipmentSlot.OFFHAND, ConfigHandler.tippedArrows.getRandomArrowStack(entity.getRNG(), false, hasCrossbow));
         }
     }
 
@@ -80,16 +80,16 @@ public class RandomTippedArrowHandler {
         if (!attacker.getEntityData().hasKey("ArrowEntity")) return;
 
         float rngRoll = attacker.getRNG().nextFloat();
-        boolean doSwap = rngRoll < ConfigHandler.ranged.tippedarrows.chanceSwap;
-        boolean newArrowIsLong = rngRoll < ConfigHandler.ranged.tippedarrows.chanceSwapLong;
+        boolean doSwap = rngRoll < ConfigHandler.tippedArrows.chanceSwap;
+        boolean newArrowIsLong = rngRoll < ConfigHandler.tippedArrows.chanceSwapLong;
 
         //Jester has higher chance to get long arrow (20%) and swaps every time (100%)
         //Other mobs have low chance for long arrow (1%) and only swap sometimes (20%)
         boolean isJester = attacker.hasCustomName() && attacker.getName().contains("Jester");
         if((isJester && doSwap) || (doSwap && newArrowIsLong))
-            attacker.setItemStackToSlot(EntityEquipmentSlot.OFFHAND, ConfigHandler.ranged.tippedarrows.getRandomArrowStack(attacker.getRNG(),true, hasCrossbow));
+            attacker.setItemStackToSlot(EntityEquipmentSlot.OFFHAND, ConfigHandler.tippedArrows.getRandomArrowStack(attacker.getRNG(),true, hasCrossbow));
         else if(isJester || doSwap)
-            attacker.setItemStackToSlot(EntityEquipmentSlot.OFFHAND, ConfigHandler.ranged.tippedarrows.getRandomArrowStack(attacker.getRNG(),false, hasCrossbow));
+            attacker.setItemStackToSlot(EntityEquipmentSlot.OFFHAND, ConfigHandler.tippedArrows.getRandomArrowStack(attacker.getRNG(),false, hasCrossbow));
     }
 
     public static boolean isValidTippedItem(Item arrow, boolean forCrossbow){

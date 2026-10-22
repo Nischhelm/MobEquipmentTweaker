@@ -131,7 +131,7 @@ public abstract class SpartanWeaponryUtil {
                     itemStack.getItem().getMaxItemUseDuration(itemStack);
         }
         else if(itemStack.getItem() instanceof ItemThrowingWeapon){
-            return Math.round(((ItemThrowingWeapon)itemStack.getItem()).getMaxChargeTicks(itemStack) * ConfigHandler.ranged.spartanSkeletons.throwingCooldown);
+            return Math.round(((ItemThrowingWeapon)itemStack.getItem()).getMaxChargeTicks(itemStack) * ConfigHandler.spartanSkeletons.throwingCooldown);
         }
         return 20; // Vanilla Bow
     }
@@ -161,7 +161,7 @@ public abstract class SpartanWeaponryUtil {
             }
 
             if(doFullReload || maxAmmo <= 1){
-                return Math.round(attackCooldown * ((ItemThrowingWeapon) itemStack.getItem()).getMaxAmmoBase() * ConfigHandler.ranged.spartanSkeletons.throwingFullReload);
+                return Math.round(attackCooldown * ((ItemThrowingWeapon) itemStack.getItem()).getMaxAmmoBase() * ConfigHandler.spartanSkeletons.throwingFullReload);
             }
         }
         return attackCooldown;

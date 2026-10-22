@@ -2,6 +2,7 @@ package mobequipmenttweaker.util;
 
 import java.util.List;
 import java.util.Random;
+import java.util.function.ToIntFunction;
 
 public class WeightedRandomIndex {
     private static int getTotalWeight(List<Integer> weights) {
@@ -30,5 +31,19 @@ public class WeightedRandomIndex {
 
     public static int getRandomIndex(Random rand, List<Integer> weights) {
         return getRandomIndex(rand, weights, getTotalWeight(weights));
+    }
+
+    public static <T> T getRandomEntry(Random rand, List<T> entries, ToIntFunction<T> weightGetter) {
+        int totalWeight = 0;
+        for (T entry : entries)
+            totalWeight += Math.max(0, weightGetter.applyAsInt(entry));
+        if (totalWeight <= 0) return null;
+
+        int rolledWeight = rand.nextInt(totalWeight);
+        for (T entry : entries) {
+            rolledWeight -= Math.max(0, weightGetter.applyAsInt(entry));
+            if (rolledWeight < 0) return entry;
+        }
+        return null;
     }
 }
