@@ -1,5 +1,6 @@
 package mobequipmenttweaker.handlers;
 
+import mobequipmenttweaker.Tags;
 import mobequipmenttweaker.config.ConfigHandler;
 import mobequipmenttweaker.config.ConfigProvider;
 import mobequipmenttweaker.config.ConfigProvider.ResolvedMobGroup;
@@ -12,6 +13,7 @@ import net.minecraft.init.Items;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.EnumDifficulty;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -164,7 +166,7 @@ public class MobEquipHandler {
                 for (EntityEquipmentSlot slot : slots) {
                     if (!first && rand.nextFloat() >= additionalPieceChance) break;
                     first = false;
-                    if (setItem(entity, slot, armorSet.getItem(slot), armorSet.dropChance, rand, localDifficulty, group.armorEnchants))
+                    if (setItem(entity, slot, armorSet.getItem(slot), armorSet.id, armorSet.dropChance, rand, localDifficulty, group.armorEnchants))
                         filledSlots.add(slot);
                 }
             }
@@ -178,7 +180,7 @@ public class MobEquipHandler {
             mainhandSet = pickWithTies(rand, ties, armorSet == null ? 0 : armorSet.tieChance, armorSet == null || armorSet.fallbackToPool,
                     tie -> tie.weight, tie -> ConfigProvider.getMainhandSet(tie.mainhandSetId),
                     () -> pickByTier(rand, group.mainhandPool, tier, set -> set.tier, set -> set.weight));
-            if (mainhandSet != null && setItem(entity, EntityEquipmentSlot.MAINHAND, mainhandSet.getItem(), mainhandSet.dropChance, rand, localDifficulty, group.mainhandEnchants))
+            if (mainhandSet != null && setItem(entity, EntityEquipmentSlot.MAINHAND, mainhandSet.getItem(), mainhandSet.id, mainhandSet.dropChance, rand, localDifficulty, group.mainhandEnchants))
                 filledSlots.add(EntityEquipmentSlot.MAINHAND);
         }
 
@@ -193,19 +195,55 @@ public class MobEquipHandler {
             if (rand.nextFloat() < offhandChance)
                 offhandSet = pickByTier(rand, group.offhandPool, tier, set -> set.tier, set -> set.weight);
         }
-        if (offhandSet != null && setItem(entity, EntityEquipmentSlot.OFFHAND, offhandSet.getItem(), offhandSet.dropChance, rand, localDifficulty, group.offhandEnchants))
+        if (offhandSet != null && setItem(entity, EntityEquipmentSlot.OFFHAND, offhandSet.getItem(), offhandSet.id, offhandSet.dropChance, rand, localDifficulty, group.offhandEnchants))
             filledSlots.add(EntityEquipmentSlot.OFFHAND);
 
         return filledSlots;
     }
 
-    private static boolean setItem(EntityLiving entity, EntityEquipmentSlot slot, Item item, float dropChance, Random rand, float localDifficulty, EnchantmentGroup enchants) {
+    private static boolean setItem(EntityLiving entity, EntityEquipmentSlot slot, Item item, String setId, float dropChance, Random rand, float localDifficulty, EnchantmentGroup enchants) {
         if (item == null || item == Items.AIR) return false;
         ItemStack stack = new ItemStack(item);
         if (enchants != null) stack = enchant(rand, stack, localDifficulty, enchants);
         entity.setItemStackToSlot(slot, stack);
         entity.setDropChance(slot, dropChance);
+        rememberSet(entity, slot, setId);
         return true;
+    }
+
+    // -------- Sets per slot --------
+    // Stored in the entity's ForgeData so it persists. Picked up items keep the reference, but vanilla gives them a drop chance of 2.0, so it doesn't matter
+
+    private static final String SETS_TAG = Tags.MODID + ":EquipmentSets";
+
+    private static void rememberSet(EntityLiving entity, EntityEquipmentSlot slot, String setId) {
+        NBTTagCompound forgeData = entity.getEntityData();
+        NBTTagCompound sets = forgeData.getCompoundTag(SETS_TAG);
+        sets.setString(slot.getName(), setId);
+        forgeData.setTag(SETS_TAG, sets);
+    }
+
+    /**
+     * @return the looting drop chance of the set the item in this slot came from, or the given vanilla value if there is none (anymore)
+     */
+    public static float getLootingDropChance(EntityLiving entity, EntityEquipmentSlot slot, float vanilla) {
+        if (!ConfigHandler.mixintoggles.mobEquipmentModify) return vanilla;
+        NBTTagCompound forgeData = entity.getEntityData();
+        if (!forgeData.hasKey(SETS_TAG)) return vanilla;
+        String setId = forgeData.getCompoundTag(SETS_TAG).getString(slot.getName());
+        if (setId.isEmpty()) return vanilla;
+
+        switch (slot) {
+            case MAINHAND:
+                MainhandSet mainhandSet = ConfigProvider.getMainhandSet(setId);
+                return mainhandSet == null ? vanilla : mainhandSet.lootingDropChance;
+            case OFFHAND:
+                OffhandSet offhandSet = ConfigProvider.getOffhandSet(setId);
+                return offhandSet == null ? vanilla : offhandSet.lootingDropChance;
+            default:
+                ArmorSet armorSet = ConfigProvider.getArmorSet(setId);
+                return armorSet == null ? vanilla : armorSet.lootingDropChance;
+        }
     }
 
     // Vanilla: chance 0.25 * f (mainhand) or 0.5 * f (armor), enchantability 5 + f * rand.nextInt(18)

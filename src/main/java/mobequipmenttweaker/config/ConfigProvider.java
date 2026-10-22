@@ -15,6 +15,7 @@ import java.util.function.Function;
  */
 public class ConfigProvider {
     private static Map<String, ResolvedMobGroup> groupsByEntity = null;
+    private static Map<String, ArmorSet> armorSetsById = null;
     private static Map<String, MainhandSet> mainhandSetsById = null;
     private static Map<String, OffhandSet> offhandSetsById = null;
 
@@ -23,6 +24,11 @@ public class ConfigProvider {
         if (entityId == null) return null;
         if (groupsByEntity == null) init();
         return groupsByEntity.get(entityId.toString());
+    }
+
+    public static ArmorSet getArmorSet(String id) {
+        if (armorSetsById == null) init();
+        return armorSetsById.get(id);
     }
 
     public static MainhandSet getMainhandSet(String id) {
@@ -37,6 +43,7 @@ public class ConfigProvider {
 
     public static void reset() {
         groupsByEntity = null;
+        armorSetsById = null;
         mainhandSetsById = null;
         offhandSetsById = null;
     }
@@ -44,7 +51,7 @@ public class ConfigProvider {
     private static void init() {
         Map<String, EquipmentAlgorithm> algorithms = mapById(ConfigHandler.algorithms.algorithms, algo -> algo.id, "Equipment Algorithm");
         Map<String, EnchantmentGroup> enchantGroups = mapById(ConfigHandler.enchantmentGroups.groups, group -> group.id, "Enchantment Group");
-        Map<String, ArmorSet> armorSets = mapById(ConfigHandler.equipmentSets.armorSets, set -> set.id, "Armor Set");
+        armorSetsById = mapById(ConfigHandler.equipmentSets.armorSets, set -> set.id, "Armor Set");
         mainhandSetsById = mapById(ConfigHandler.equipmentSets.mainhandSets, set -> set.id, "Mainhand Set");
         offhandSetsById = mapById(ConfigHandler.equipmentSets.offhandSets, set -> set.id, "Offhand Set");
 
@@ -62,7 +69,7 @@ public class ConfigProvider {
                     resolveOptional(enchantGroups, group.enchantments.armorEnchantGroup, group.id, "Enchantment Group"),
                     resolveOptional(enchantGroups, group.enchantments.mainhandEnchantGroup, group.id, "Enchantment Group"),
                     resolveOptional(enchantGroups, group.enchantments.offhandEnchantGroup, group.id, "Enchantment Group"),
-                    resolveAll(armorSets, group.equipmentPools.armorSets, group.id, "Armor Set"),
+                    resolveAll(armorSetsById, group.equipmentPools.armorSets, group.id, "Armor Set"),
                     resolveAll(mainhandSetsById, group.equipmentPools.mainhandSets, group.id, "Mainhand Set"),
                     resolveAll(offhandSetsById, group.equipmentPools.offhandSets, group.id, "Offhand Set")
             );

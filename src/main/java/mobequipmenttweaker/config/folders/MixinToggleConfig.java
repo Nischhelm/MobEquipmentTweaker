@@ -12,6 +12,12 @@ public class MixinToggleConfig {
     @Config.Name("Mob Equipment Modification")
     public boolean mobEquipmentModify = true;
 
+    @Config.Comment("Allows the \"Looting Drop Chance\" of equipment sets to replace vanilla's fixed +1% drop chance per looting level for items rolled by a mob group. Other items keep vanilla behavior.")
+    @Config.Name("Equipment Set Looting Drop Chances (Vanilla)")
+    @Config.RequiresMcRestart
+    @MixinConfig.MixinToggle(earlyMixin = "mixins.mobequipmenttweaker.vanilla.lootingdropchance.json", defaultValue = true)
+    public boolean equipmentSetLootingDropChance = true;
+
     @Config.Comment("Allows skeletons to use Spartan Weaponry and benefit from weapon stats. Options in the \"Mob Equipment\" config. If \"Modded Arrow Skeletons\" is disabled, skeletons using crossbows will always use normal bolts, and skeletons using longbows will use the same arrow behaviors like when they have a normal bow.")
     @Config.Name("Spartan Skeletons (Vanilla/SpartanWeaponry)")
     @Config.RequiresMcRestart
