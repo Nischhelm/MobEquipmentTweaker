@@ -179,7 +179,7 @@ public abstract class AbstractEntitySkeleton_ModdedBowMixin extends EntityMob {
             if(fishUndeadArrow != null) return fishUndeadArrow;
         }
 
-        return original.call(distanceFactor);
+        return vanillaArrow;
     }
 
     @Unique
